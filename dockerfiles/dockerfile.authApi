@@ -1,0 +1,27 @@
+# Etapa de compilación
+FROM golang:1.18 AS builder
+
+WORKDIR /app
+
+# Copiar archivos del servicio
+COPY . .
+
+# Inicializar y construir
+RUN go mod init auth-api && \
+    go mod tidy && \
+    go build -o auth-api
+
+# Etapa final: imagen ligera
+FROM alpine:3.18
+
+WORKDIR /app
+COPY --from=builder /app/auth-api .
+
+# Variables de entorno por defecto
+ENV JWT_SECRET=PRFT
+ENV AUTH_API_PORT=8000
+ENV USERS_API_ADDRESS=http://users-api:8083
+
+EXPOSE 8000
+
+CMD ["./auth-api"]

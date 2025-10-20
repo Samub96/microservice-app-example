@@ -1,0 +1,23 @@
+# Etapa 1: Compilación
+FROM node:8.17.0 AS builder
+
+WORKDIR /app
+
+COPY . .
+
+RUN npm install && npm run build
+
+# Etapa 2: Servidor ligero (Nginx)
+FROM nginx:alpine
+
+# Copiar archivos compilados al servidor Nginx
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Configurar variables de entorno dinámicas
+ENV PORT=8080
+ENV AUTH_API_ADDRESS=http://auth-api:8000
+ENV TODOS_API_ADDRESS=http://todos-api:8082
+
+EXPOSE 8080
+
+CMD ["nginx", "-g", "daemon off;"]
