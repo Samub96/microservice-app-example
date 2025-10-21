@@ -1,16 +1,30 @@
-FROM python:3.9-slim
+# ===============================
+# Stage 1: Base image
+# ===============================
+FROM python:3.6-slim
 
+# Set working directory
 WORKDIR /app
 
-# Copiar archivos del microservicio
+# Instalamos gcc y dependencias de Python necesarias para compilar extensiones
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiamos los requirements primero para aprovechar cache
+COPY requirements.txt .
+
+# Instalamos dependencias
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiamos el resto del código fuente
 COPY . .
 
-# Instalar dependencias
-RUN pip3 install --no-cache-dir -r requirements.txt
+# Variables de entorno por defecto (pueden ser sobrescritas)
+ENV REDIS_HOST=redis \
+    REDIS_PORT=6379 \
+    REDIS_CHANNEL=log_channel
 
-# Variables de entorno por defecto
-ENV REDIS_HOST=redis
-ENV REDIS_PORT=6379
-ENV REDIS_CHANNEL=log_channel
-
+# Comando de ejecución
 CMD ["python3", "main.py"]
