@@ -145,6 +145,7 @@
 
   Es totalmente funcional en on-premise
   
+  Para mayor detalle buscar en la carpeta ````/doc/Despliegue docker.md````
 
  > Taller 2 **Kubernetes**
 
@@ -164,5 +165,11 @@ En la clase de Plataformas 2 vimos temas de kubernetes importantes como
  8. network policies 
  
  Entonces como consiste la actividad? 
+
+ El taller consta de desplegar  los microservicios en kubernetes aplicando los temas que vimos 
+
+ En el directorio ````/doc/Desplieguekubernetes.d```` podemos ver a detalle lo realizado
+
+
  
  
