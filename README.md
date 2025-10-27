@@ -1,17 +1,168 @@
-# Microservice App - PRFT Devops Training
+# Dockerizacion y kubernetes de microservicios 
 
-This is the application you are going to use through the whole traninig. This, hopefully, will teach you the fundamentals you need in a real project. You will find a basic TODO application designed with a [microservice architecture](https://microservices.io). Although is a TODO application, it is interesting because the microservices that compose it are written in different programming language or frameworks (Go, Python, Vue, Java, and NodeJS). With this design you will experiment with multiple build tools and environments. 
+![actividad](/arch-img/Microservices.png)
 
-## Components
-In each folder you can find a more in-depth explanation of each component:
 
-1. [Users API](/users-api) is a Spring Boot application. Provides user profiles. At the moment, does not provide full CRUD, just getting a single user and all users.
-2. [Auth API](/auth-api) is a Go application, and provides authorization functionality. Generates [JWT](https://jwt.io/) tokens to be used with other APIs.
-3. [TODOs API](/todos-api) is a NodeJS application, provides CRUD functionality over user's TODO records. Also, it logs "create" and "delete" operations to [Redis](https://redis.io/) queue.
-4. [Log Message Processor](/log-message-processor) is a queue processor written in Python. Its purpose is to read messages from a Redis queue and print them to standard output.
-5. [Frontend](/frontend) Vue application, provides UI.
+## Estructura del repositorio
 
-## Architecture
+```
+├── 📁 arch-img
+│   └── 🖼️ Microservices.png
+├── 📁 auth-api
+│   ├── ⚙️ .gitignore
+│   ├── 📄 Gopkg.lock
+│   ├── ⚙️ Gopkg.toml
+│   ├── 📝 README.md
+│   ├── 📄 go.mod
+│   ├── 📄 go.sum
+│   ├── 🐹 main.go
+│   ├── 🐹 tracing.go
+│   └── 🐹 user.go
+├── 📁 doc          <---- Documentacion inicial ----->
+│   └── 📝 README.md
+├── 📁 dockerfiles  <--- Archivos del taller 1 ----- >
+│   ├── ⚙️ docker-compose.yml
+│   ├── 📄 dockerfile.authApi
+│   ├── 📄 dockerfile.frontend
+│   ├── 📄 dockerfile.log-message
+│   ├── 📄 dockerfile.todoApi
+│   └── 📄 dockerfile.userApi
+├── 📁 frontend
+│   ├── 📁 config
+│   │   ├── 📄 dev.env.js
+│   │   ├── 📄 index.js
+│   │   └── 📄 prod.env.js
+│   ├── 📁 src
+│   │   ├── 📁 assets
+│   │   │   └── 🖼️ logo.png
+│   │   ├── 📁 components
+│   │   │   ├── 📁 common
+│   │   │   │   └── 📄 Spinner.vue
+│   │   │   ├── 📄 App.vue
+│   │   │   ├── 📄 AppNav.vue
+│   │   │   ├── 📄 Login.vue
+│   │   │   ├── 📄 TodoItem.vue
+│   │   │   └── 📄 Todos.vue
+│   │   ├── 📁 router
+│   │   │   └── 📄 index.js
+│   │   ├── 📁 store
+│   │   │   ├── 📄 index.js
+│   │   │   ├── 📄 mutations.js
+│   │   │   ├── 📄 plugins.js
+│   │   │   └── 📄 state.js
+│   │   ├── 📄 auth.js
+│   │   ├── 📄 main.js
+│   │   └── 📄 zipkin.js
+│   ├── 📁 static
+│   │   └── ⚙️ .gitkeep
+│   ├── ⚙️ .editorconfig
+│   ├── ⚙️ .eslintignore
+│   ├── 📄 .eslintrc.js
+│   ├── ⚙️ .gitignore
+│   ├── 📄 .postcssrc.js
+│   ├── 📝 README.md
+│   ├── 🌐 index.html
+│   ├── ⚙️ package-lock.json
+│   └── ⚙️ package.json
+├── 📁 log-message-processor
+│   ├── 📝 README.md
+│   ├── 🐍 main.py
+│   └── 📄 requirements.txt
+├── 📁 todos-api
+│   ├── ⚙️ .gitignore
+│   ├── 📝 README.md
+│   ├── ⚙️ package-lock.json
+│   ├── ⚙️ package.json
+│   ├── 📄 routes.js
+│   ├── 📄 server.js
+│   ├── 📄 todoController.js
+│   └── 📄 todos-api
+├── 📁 users-api
+│   ├── 📁 .mvn
+│   │   └── 📁 wrapper
+│   │       ├── 📄 maven-wrapper.jar
+│   │       └── 📄 maven-wrapper.properties
+│   ├── 📁 src
+│   │   ├── 📁 main
+│   │   │   ├── 📁 java
+│   │   │   │   └── 📁 com
+│   │   │   │       └── 📁 elgris
+│   │   │   │           └── 📁 usersapi
+│   │   │   │               ├── 📁 api
+│   │   │   │               │   └── ☕ UsersController.java
+│   │   │   │               ├── 📁 configuration
+│   │   │   │               │   └── ☕ SecurityConfiguration.java
+│   │   │   │               ├── 📁 models
+│   │   │   │               │   ├── ☕ User.java
+│   │   │   │               │   └── ☕ UserRole.java
+│   │   │   │               ├── 📁 repository
+│   │   │   │               │   └── ☕ UserRepository.java
+│   │   │   │               ├── 📁 security
+│   │   │   │               │   ├── ☕ AccessUserFilter.java
+│   │   │   │               │   └── ☕ JwtAuthenticationFilter.java
+│   │   │   │               └── ☕ UsersApiApplication.java
+│   │   │   └── 📁 resources
+│   │   │       ├── 📄 application.properties
+│   │   │       └── 📄 data.sql
+│   │   └── 📁 test
+│   │       └── 📁 java
+│   │           └── 📁 com
+│   │               └── 📁 elgris
+│   │                   └── 📁 usersapi
+│   │                       └── ☕ UsersApiApplicationTests.java
+│   ├── ⚙️ .gitignore
+│   ├── 📝 README.md
+│   ├── 📄 mvnw
+│   ├── 📄 mvnw.cmd
+│   └── ⚙️ pom.xml
+├── 📄 LICENSE
+├── 📝 README.md
+├── 📦 dockerfiles.zip
+└── 📄 kubectl.sha256
+```
+## Resumen de la actividad
+ > Taller 1 **Dokerizacion** 
 
-Take a look at the components diagram that describes them and their interactions.
-![microservice-app-example](/arch-img/Microservices.png)
+ El laboratorio consiste en levantar todos los servicios del diagrama en docker garantizando que fuese funcional
+
+ En este caso ya funciona si vamos al directorio de ````dockerfie```` tenemos los dockerfiles para crear cada servicio de manera manual siguiendo las indicaciones de la documentacion de dicho servicio.
+
+
+
+
+ ```
+├── ⚙️ docker-compose.yml
+├── 📄 dockerfile.authApi
+├── 📄 dockerfile.frontend
+├── 📄 dockerfile.log-message
+├── 📄 dockerfile.todoApi
+└── 📄 dockerfile.userApi
+```
+
+ Una vez probado los dockerfiles  que fuesen funcionales, migramos a automatizar estos servicios con un docker-compose, donde con solo aplicar el comando ````docker compose up```` se levantarian y se configurarian segun las politicas que el manifiesto tenga
+
+ > PD: Esto fue testeado en un entorno de codespace de github, para que se pueda ver bien la activad hay que configurar los port forwarding para que los contenedores puedan comunicarse con los puertos del pc.
+
+  Es totalmente funcional en on-premise
+  
+
+ > Taller 2 **Kubernetes**
+
+ Como dijo un filosofo muy famoso 
+ <p align="center">"Aqui viene lo chido"</p>
+<p align="center">  -Luisito comunica-</p>
+
+En la clase de Plataformas 2 vimos temas de kubernetes importantes como 
+
+ 1. Arquitectura master node - worker node
+ 2. Despliegue con minikube
+ 3. kubeconfig, services and deployments
+ 4. Replicaset
+ 5. Networking
+ 6. configmaps and secrets
+ 7. Autoscaling
+ 8. network policies 
+ 
+ Entonces como consiste la actividad? 
+ 
+ 
