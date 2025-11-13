@@ -1,0 +1,77 @@
+# ServiceMonitor para Auth API
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: auth-api-monitor
+  namespace: microservices
+  labels:
+    app: auth-api
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: auth-api
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+
+---
+# ServiceMonitor para Users API
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: users-api-monitor
+  namespace: microservices
+  labels:
+    app: users-api
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: users-api
+  endpoints:
+  - port: http
+    path: /actuator/prometheus
+    interval: 30s
+    scrapeTimeout: 10s
+
+---
+# ServiceMonitor para Todos API
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: todos-api-monitor
+  namespace: microservices
+  labels:
+    app: todos-api
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: todos-api
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+
+---
+# ServiceMonitor para Redis
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: redis-monitor
+  namespace: microservices
+  labels:
+    app: redis
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: redis
+  endpoints:
+  - port: redis
+    interval: 30s
+    scrapeTimeout: 10s

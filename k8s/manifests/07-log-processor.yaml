@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-processor
+  namespace: microservices
+  labels:
+    app: log-processor
+    version: v1
+    tier: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-processor
+  template:
+    metadata:
+      labels:
+        app: log-processor
+        version: v1
+        tier: worker
+    spec:
+      containers:
+      - name: log-processor
+        image: log-processor:latest
+        imagePullPolicy: Never
+        env:
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: REDIS_HOST
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: REDIS_PORT
+        - name: REDIS_CHANNEL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: REDIS_CHANNEL
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: REDIS_PASSWORD
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: LOG_LEVEL
+        - name: BATCH_SIZE
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: BATCH_SIZE
+        - name: PROCESSING_INTERVAL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: PROCESSING_INTERVAL
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        livenessProbe:
+          exec:
+            command:
+            - python
+            - -c
+            - "import redis; r = redis.Redis(host='redis', port=6379); r.ping()"
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]

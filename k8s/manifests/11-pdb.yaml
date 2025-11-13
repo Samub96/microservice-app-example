@@ -1,0 +1,50 @@
+# PDB para Auth API
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: auth-api-pdb
+  namespace: microservices
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: auth-api
+
+---
+# PDB para Users API
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: users-api-pdb
+  namespace: microservices
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: users-api
+
+---
+# PDB para Todos API
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: todos-api-pdb
+  namespace: microservices
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: todos-api
+
+---
+# PDB para Frontend
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: frontend-pdb
+  namespace: microservices
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: frontend

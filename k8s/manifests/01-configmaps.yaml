@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: microservices
+data:
+  # Auth API Configuration
+  AUTH_API_PORT: "8081"
+  USERS_API_ADDRESS: "http://users-api:8083"
+  
+  # Users API Configuration  
+  SERVER_PORT: "8083"
+  
+  # Todos API Configuration
+  TODO_API_PORT: "8082"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  REDIS_CHANNEL: "log_channel"
+  
+  # Frontend Configuration
+  PORT: "8080"
+  AUTH_API_ADDRESS: "http://auth-api:8081"
+  TODOS_API_ADDRESS: "http://todos-api:8082"
+  
+  # Log Processor Configuration
+  LOG_LEVEL: "INFO"
+  BATCH_SIZE: "10"
+  PROCESSING_INTERVAL: "5"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+  namespace: microservices
+data:
+  redis.conf: |
+    # Redis configuration
+    maxmemory 256mb
+    maxmemory-policy allkeys-lru
+    timeout 0
+    tcp-keepalive 300
+    databases 16
+    save 900 1
+    save 300 10
+    save 60 10000
+    rdbcompression yes
+    rdbchecksum yes
