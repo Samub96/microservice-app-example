@@ -187,7 +187,7 @@ bash quick-test.sh
 ```
 **Resultado obtenido:**
 
-![resultado](doc/pics/image.png)
+![resultado](doc/pics/resultado.png)
 
 
  > **PD:** Esto fue testeado en un entorno de codespace de github, para que se pueda ver bien la actividad hay que configurar los port forwarding para que los contenedores puedan comunicarse con los puertos del pc.
@@ -414,7 +414,7 @@ Al completar el despliegue deberías tener:
 ✅ **Pipeline CI/CD** con múltiples estrategias  
 ✅ **Testing automatizado** verificando funcionalidad  
 
-Para mayor detalle buscar en la carpeta ````/k8s/README.md````
+
 
 
 
