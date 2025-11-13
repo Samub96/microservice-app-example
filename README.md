@@ -419,9 +419,10 @@ kubectl logs -f deployment/todos-api -n microservices
 
 # Verificar network policies
 kubectl describe networkpolicy -n microservices
-```
+
 
 ### 🔧 **Arquitectura de Kubernetes**
+
 
 ```
 ┌─────────────────────────────────────────────────────────┐
