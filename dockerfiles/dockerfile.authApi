@@ -22,9 +22,9 @@ WORKDIR /app
 COPY --from=builder /app/auth-api .
 
 # Variables de entorno (se pueden sobrescribir al ejecutar)
-ENV AUTH_API_PORT=8000
+ENV AUTH_API_PORT=8081
 ENV USERS_API_ADDRESS=http://127.0.0.1:8083
 ENV JWT_SECRET=PRFT
 
-EXPOSE 8000
+EXPOSE 8081
 CMD ["sh", "-c", "./auth-api"]

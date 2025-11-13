@@ -1,12 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Namespace donde se aplicarán todos los recursos
-namespace: microservices
-
 # Recursos en orden de dependencia
 resources:
   - 00-namespace.yaml
+  - 13-monitoring-namespace.yaml
   - 01-configmaps.yaml
   - 02-secrets.yaml
   - 03-redis.yaml
@@ -19,22 +17,32 @@ resources:
   - 10-network-policies.yaml
   - 11-pdb.yaml
   - 12-monitoring.yaml
+  - 14-monitoring-config.yaml
+  - 15-monitoring-stack.yaml
 
 # Labels comunes para todos los recursos
-commonLabels:
-  project: microservices-app
-  managed-by: kustomize
-  environment: production
+labels:
+  - pairs:
+      project: microservices-app
+      managed-by: kustomize
+      environment: production
 
 # Imágenes que se pueden personalizar
+# Para desarrollo local (kind/minikube): usar nombres simples como auth-api:latest
+# Para producción: usar registry completo como ghcr.io/samub96/auth-api:v1.0.0
 images:
   - name: auth-api
     newTag: v1.0.0
+    # newName: ghcr.io/samub96/auth-api  # Descomentar para producción
   - name: users-api
     newTag: v1.0.0
+    # newName: ghcr.io/samub96/users-api
   - name: todos-api
     newTag: v1.0.0
+    # newName: ghcr.io/samub96/todos-api
   - name: frontend
     newTag: v1.0.0
+    # newName: ghcr.io/samub96/frontend
   - name: log-processor
     newTag: v1.0.0
+    # newName: ghcr.io/samub96/log-processor

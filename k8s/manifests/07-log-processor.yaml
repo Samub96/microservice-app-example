@@ -22,7 +22,7 @@ spec:
       containers:
       - name: log-processor
         image: log-processor:latest
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         env:
         - name: REDIS_HOST
           valueFrom:
