@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: log-processor
-        image: log-processor:latest
+        image: log-processor:v1.0.0
         imagePullPolicy: IfNotPresent
         env:
         - name: REDIS_HOST
@@ -39,11 +39,6 @@ spec:
             configMapKeyRef:
               name: app-config
               key: REDIS_CHANNEL
-        - name: REDIS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: app-secrets
-              key: REDIS_PASSWORD
         - name: LOG_LEVEL
           valueFrom:
             configMapKeyRef:

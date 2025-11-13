@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: todos-api
-        image: todos-api:latest
+        image: todos-api:v1.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8082
@@ -52,11 +52,6 @@ spec:
             configMapKeyRef:
               name: app-config
               key: REDIS_CHANNEL
-        - name: REDIS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: app-secrets
-              key: REDIS_PASSWORD
         resources:
           requests:
             memory: "128Mi"
@@ -64,22 +59,22 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "300m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8082
-          initialDelaySeconds: 30
-          periodSeconds: 30
-          timeoutSeconds: 10
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 8082
-          initialDelaySeconds: 15
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: 8082
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 30
+        #   timeoutSeconds: 10
+        #   failureThreshold: 3
+        # readinessProbe:
+        #   httpGet:
+        #     path: /ready
+        #     port: 8082
+        #   initialDelaySeconds: 15
+        #   periodSeconds: 10
+        #   timeoutSeconds: 5
+        #   failureThreshold: 3
         lifecycle:
           preStop:
             exec:

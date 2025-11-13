@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: auth-api
-        image: auth-api:latest
+        image: auth-api:v1.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8081
@@ -51,7 +51,7 @@ spec:
             cpu: "300m"
         livenessProbe:
           httpGet:
-            path: /health
+            path: /version
             port: 8081
           initialDelaySeconds: 30
           periodSeconds: 30
@@ -59,7 +59,7 @@ spec:
           failureThreshold: 3
         readinessProbe:
           httpGet:
-            path: /ready
+            path: /version
             port: 8081
           initialDelaySeconds: 15
           periodSeconds: 10

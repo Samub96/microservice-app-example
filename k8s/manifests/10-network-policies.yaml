@@ -48,12 +48,7 @@ spec:
     ports:
     - protocol: TCP
       port: 8082
-  - to: {}
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
+  - {} # Allow DNS resolution
 
 ---
 # Allow auth-api to communicate with users-api
@@ -85,12 +80,32 @@ spec:
     ports:
     - protocol: TCP
       port: 8083
-  - to: {}
+  - {} # Allow DNS resolution
+
+---
+# Allow users-api incoming traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: users-api-policy
+  namespace: microservices
+spec:
+  podSelector:
+    matchLabels:
+      app: users-api
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: auth-api
     ports:
     - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
+      port: 8083
+  egress:
+  - {} # Allow DNS resolution
 
 ---
 # Allow todos-api to communicate with redis
@@ -122,45 +137,10 @@ spec:
     ports:
     - protocol: TCP
       port: 6379
-  - to: {}
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
+  - {} # Allow DNS resolution
 
 ---
-# Allow users-api traffic
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: users-api-policy
-  namespace: microservices
-spec:
-  podSelector:
-    matchLabels:
-      app: users-api
-  policyTypes:
-  - Ingress
-  - Egress
-  ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: auth-api
-    ports:
-    - protocol: TCP
-      port: 8083
-  egress:
-  - to: {}
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
-
----
-# Allow redis communication
+# Allow redis incoming traffic
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -185,15 +165,10 @@ spec:
     - protocol: TCP
       port: 6379
   egress:
-  - to: {}
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
+  - {} # Allow DNS resolution
 
 ---
-# Allow log-processor to access redis
+# Allow log-processor to communicate with redis
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -204,7 +179,9 @@ spec:
     matchLabels:
       app: log-processor
   policyTypes:
+  - Ingress
   - Egress
+  ingress: []  # No incoming traffic needed
   egress:
   - to:
     - podSelector:
@@ -213,9 +190,23 @@ spec:
     ports:
     - protocol: TCP
       port: 6379
-  - to: {}
+  - {} # Allow DNS resolution
+
+---
+# Allow DNS resolution for all pods
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: microservices
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to: []
     ports:
-    - protocol: TCP
-      port: 53
     - protocol: UDP
+      port: 53
+    - protocol: TCP
       port: 53

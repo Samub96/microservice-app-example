@@ -10,7 +10,7 @@ spec:
     kind: Deployment
     name: auth-api
   minReplicas: 2
-  maxReplicas: 10
+  maxReplicas: 4
   metrics:
   - type: Resource
     resource:
@@ -51,7 +51,7 @@ spec:
     kind: Deployment
     name: users-api
   minReplicas: 2
-  maxReplicas: 8
+  maxReplicas: 4
   metrics:
   - type: Resource
     resource:
@@ -92,7 +92,7 @@ spec:
     kind: Deployment
     name: todos-api
   minReplicas: 2
-  maxReplicas: 12
+  maxReplicas: 4
   metrics:
   - type: Resource
     resource:
@@ -133,7 +133,7 @@ spec:
     kind: Deployment
     name: frontend
   minReplicas: 2
-  maxReplicas: 6
+  maxReplicas: 4
   metrics:
   - type: Resource
     resource:
