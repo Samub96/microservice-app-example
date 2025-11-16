@@ -3,6 +3,9 @@
 ![actividad](/arch-img/Microservices.png)
 
 
+
+[video](https://youtu.be/8P1VgUeN8lc?si=-OIB0QamVomSVQ9r)
+
 ## Estructura del repositorio
 
 ```
